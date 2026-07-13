@@ -8,4 +8,7 @@ PROVIDER_CONFIG = {
     "groq": {
         "base_url": "https://api.groq.com/openai/v1/",
     },
+    "nvidia": {
+        "base_url": "https://integrate.api.nvidia.com/v1",
+    },
 }
