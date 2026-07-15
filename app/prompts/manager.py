@@ -20,9 +20,14 @@ class PromptManager:
 
         if not template_path.exists():
             raise FileNotFoundError(
-                f"Template '{template_name}' does not exist."
+                f"Template '{template_name}' not found."
             )
 
         template = template_path.read_text(encoding="utf-8")
 
-        return template.format(**kwargs)
+        try:
+            return template.format(**kwargs)
+        except KeyError as e:
+            raise ValueError(
+                f"Missing template variable: {e.args[0]}"
+            )

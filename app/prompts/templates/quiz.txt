@@ -1,0 +1,13 @@
+Create a quiz.
+
+Topic:
+{topic}
+
+Difficulty:
+{difficulty}
+
+Requirements:
+
+- Five questions
+- Multiple choice
+- Include the correct answer

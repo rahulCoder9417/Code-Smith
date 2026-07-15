@@ -1,0 +1,9 @@
+Summarize the following topic.
+
+Topic:
+{topic}
+
+Maximum Words:
+{max_words}
+
+Keep the explanation concise.
