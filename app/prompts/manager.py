@@ -1,33 +1,40 @@
 from pathlib import Path
 
+
 class PromptManager:
+
     def __init__(self):
-        self.template_dir = Path(__file__).parent / "templates"
+        base = Path(__file__).parent
 
-    def render(self, template_name: str, **kwargs) -> str:
-        """
-        Load a prompt template and replace placeholders.
+        self.system_dir = base / "system"
+        self.user_dir = base / "user"
 
-        Example:
-            render(
-                "explanation",
-                topic="Binary Search",
-                difficulty="Beginner"
-            )
-        """
+    def load_system(self, name: str) -> str:
 
-        template_path = self.template_dir / f"{template_name}.txt"
+        path = self.system_dir / f"{name}.txt"
 
-        if not template_path.exists():
+        if not path.exists():
             raise FileNotFoundError(
-                f"Template '{template_name}' not found."
+                f"System prompt '{name}' not found."
             )
 
-        template = template_path.read_text(encoding="utf-8")
+        return path.read_text(encoding="utf-8")
+
+    def render_user(self, template_name: str, **kwargs):
+
+        path = self.user_dir / f"{template_name}.txt"
+
+        if not path.exists():
+            raise FileNotFoundError(
+                f"User template '{template_name}' not found."
+            )
+
+        template = path.read_text(encoding="utf-8")
 
         try:
             return template.format(**kwargs)
+
         except KeyError as e:
             raise ValueError(
-                f"Missing template variable: {e.args[0]}"
+                f"Missing variable '{e.args[0]}'"
             )
