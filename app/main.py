@@ -14,7 +14,7 @@ def main():
             print("Goodbye!")
             break
 
-        answer = chat.generate_response(question)
+        answer = chat.generate(question)
 
         print("\nAssistant:\n")
         print(answer)

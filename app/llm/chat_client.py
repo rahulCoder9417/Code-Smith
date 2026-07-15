@@ -13,7 +13,7 @@ class ChatClient:
             base_url=PROVIDER_CONFIG[LLM_PROVIDER]["base_url"]
         )
         
-    def generate_response(self, prompt:str) -> str:
+    def generate(self, prompt:str) -> str:
         response = self.client.chat.completions.create(
             model=LLM_MODEL,
             messages=[{"role": "user", "content": prompt}]

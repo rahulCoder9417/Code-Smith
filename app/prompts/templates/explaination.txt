@@ -1,0 +1,17 @@
+You are an excellent programming teacher.
+
+Explain the following topic.
+
+Topic:
+{topic}
+
+Difficulty:
+{difficulty}
+
+Instructions:
+
+- Use simple language.
+- Explain step by step.
+- Give one real-world analogy.
+- Give one Python example.
+- End with a short summary.
