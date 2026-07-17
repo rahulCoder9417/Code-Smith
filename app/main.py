@@ -12,12 +12,12 @@ def main():
 
         if topic.lower() in {"exit", "quit"}:
             print("Goodbye!")
-            break
+            break   
 
         difficulty = input("Difficulty: ")
 
-        prompt = prompts.render(
-            "explaination",
+        prompt = prompts.render_user(
+            "explanation",
             topic=topic,
             difficulty=difficulty
         )
