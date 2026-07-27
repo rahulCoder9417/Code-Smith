@@ -7,6 +7,7 @@ load_dotenv()
 LLM_PROVIDER = os.getenv("LLM_PROVIDER")
 LLM_MODEL = os.getenv("LLM_MODEL")
 LLM_API_KEY = os.getenv("LLM_API_KEY")
+SYSTEM_PROMPT = os.getenv("SYSTEM_PROMPT", "teacher")
 
 if not LLM_PROVIDER:
     raise ValueError("LLM_PROVIDER is missing.")
