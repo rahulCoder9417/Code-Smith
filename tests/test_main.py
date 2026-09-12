@@ -133,3 +133,32 @@ def test_system_prompt_is_loaded_once_not_per_question(
     )
 
     assert {call.system_prompt for call in fake_client.calls} == {"You are a teacher."}
+
+
+def test_a_failing_model_call_does_not_end_the_session(prompts: PromptManager) -> None:
+    """A provider error should be reported, and the loop should continue."""
+
+    class ExplodingThenWorkingClient:
+        def __init__(self) -> None:
+            self.calls = 0
+
+        def generate(self, system_prompt: str, user_prompt: str) -> str:
+            self.calls += 1
+            if self.calls == 1:
+                raise RuntimeError("410 Gone: that model was retired")
+            return "second answer"
+
+    client = ExplodingThenWorkingClient()
+    printed: list[str] = []
+
+    run_cli(
+        client=client,
+        prompts=prompts,
+        system_prompt_name="teacher",
+        read_input=scripted_input("first", "beginner", "second", "beginner", "exit"),
+        write_output=printed.append,
+    )
+
+    assert client.calls == 2
+    assert any("410 Gone" in line for line in printed)
+    assert "second answer" in printed

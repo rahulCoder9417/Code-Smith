@@ -60,7 +60,17 @@ def run_cli(
         user_prompt = prompts.render_user("explanation", topic=topic, difficulty=difficulty)
 
         logger.info("Explaining %r at %r level", topic, difficulty)
-        answer = client.generate(system_prompt, user_prompt)
+
+        try:
+            answer = client.generate(system_prompt, user_prompt)
+        except Exception as error:
+            # One failed call should not end the session. Retries, timeouts
+            # and a fallback provider arrive in Phase 1.5; for now just
+            # report it in a readable way and keep the loop alive.
+            logger.exception("The model call failed")
+            write_output(f"\nSorry, that request failed: {error}")
+            write_output("Check LLM_PROVIDER / LLM_MODEL in your .env, then try again.")
+            continue
 
         write_output("\nAssistant:\n")
         write_output(answer)

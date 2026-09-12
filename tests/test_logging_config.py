@@ -6,7 +6,7 @@ import logging
 
 import pytest
 
-from app.logging_config import configure_logging, get_logger
+from app.logging_config import NOISY_LOGGERS, configure_logging, get_logger
 
 
 @pytest.fixture(autouse=True)
@@ -44,10 +44,22 @@ def test_logs_go_to_stderr_not_stdout(capsys: pytest.CaptureFixture[str]) -> Non
     assert captured.out == ""
 
 
-def test_http_libraries_are_quietened() -> None:
+@pytest.mark.parametrize("name", NOISY_LOGGERS)
+def test_http_libraries_are_quietened(name: str) -> None:
     configure_logging("DEBUG")
-    assert logging.getLogger("httpx").level == logging.WARNING
-    assert logging.getLogger("openai").level == logging.WARNING
+    assert logging.getLogger(name).level == logging.WARNING
+
+
+def test_vendored_httpx_names_are_covered() -> None:
+    """openai 3.x ships httpx as httpx2/httpcore2.
+
+    Silencing only the unvendored names let every TLS handshake through at
+    DEBUG. Child loggers inherit, so httpcore2.connection is covered too.
+    """
+    configure_logging("DEBUG")
+
+    assert {"httpx2", "httpcore2"} <= set(NOISY_LOGGERS)
+    assert logging.getLogger("httpcore2.connection").getEffectiveLevel() == logging.WARNING
 
 
 def test_get_logger_returns_a_named_logger() -> None:

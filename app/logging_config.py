@@ -20,6 +20,9 @@ import sys
 LOG_FORMAT = "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
 DATE_FORMAT = "%H:%M:%S"
 
+# Third-party loggers that are far too chatty to leave at our level.
+NOISY_LOGGERS = ("httpx", "httpcore", "httpx2", "httpcore2", "openai")
+
 
 def configure_logging(level: str = "INFO") -> None:
     """Set up logging for the whole application. Call this once, at startup.
@@ -36,9 +39,12 @@ def configure_logging(level: str = "INFO") -> None:
     root.addHandler(handler)
     root.setLevel(level.upper())
 
-    # The HTTP libraries under the OpenAI SDK log every request at INFO,
-    # which drowns out our own messages. Only show their warnings.
-    for noisy in ("httpx", "httpcore", "openai"):
+    # The HTTP libraries under the OpenAI SDK log every request - and at
+    # DEBUG, every TLS handshake - which drowns out our own messages.
+    # openai 3.x vendors httpx as httpx2/httpcore2, so both spellings are
+    # listed. Setting a parent logger also covers its children, so
+    # "httpcore2" silences "httpcore2.connection" too.
+    for noisy in NOISY_LOGGERS:
         logging.getLogger(noisy).setLevel(logging.WARNING)
 
 
