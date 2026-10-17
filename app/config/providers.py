@@ -1,4 +1,15 @@
-PROVIDER_CONFIG = {
+"""The OpenAI-compatible endpoints we can talk to.
+
+Every provider here speaks the same wire format as the OpenAI API, so one
+client class works for all of them - only the base_url and the model id
+change. Adding a provider means adding a line to this table.
+"""
+
+from __future__ import annotations
+
+from typing import Final
+
+PROVIDER_CONFIG: Final[dict[str, dict[str, str]]] = {
     "openai": {
         "base_url": "https://api.openai.com/v1/",
     },

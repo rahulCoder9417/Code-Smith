@@ -1,4 +1,24 @@
+# Virtualenvs (uv creates .venv/; venv/ is the old one we removed)
 .venv/
+venv/
+
+# Python bytecode
 __pycache__/
 *.pyc
+*.pyo
+
+# Secrets - NEVER commit these
 .env
+.env.*
+!.env.example
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+dist/
+
+# Personal learning notes and roadmap (not part of the shipped code)
+ignore/
